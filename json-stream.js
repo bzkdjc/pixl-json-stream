@@ -45,11 +45,11 @@ module.exports = Class.create({
 				self.buffer = '';
 			}
 			
-			var records = data.split(new RegExp(eoj));
+			var records = data.split(new RegExp(self.eoj));
 			
 			// see if data ends on EOL -- if not, we have a partial block
 			// fill buffer for next read
-			if (data.substring(data.length - eoj.length) != eoj) {
+			if (data.substring(data.length - self.eoj.length) != self.eoj) {
 				self.buffer = records.pop();
 			}
 			
@@ -74,7 +74,7 @@ module.exports = Class.create({
 				} // record has json
 				else if (record.length && record.match(/\S/)) {
 					// non-json garbage, emit just in case app cares
-					self.emit('text', record + eoj);
+					self.emit('text', record + self.eoj);
 				}
 			} // foreach record
 			
@@ -95,7 +95,7 @@ module.exports = Class.create({
 		var data = JSON.stringify(json);
 		if (this.perf) this.perf.end('json_compose');
 		
-		this.streamOut.write( data + eoj, callback );
+		this.streamOut.write( data + this.eoj, callback );
 	}
 	
 });
