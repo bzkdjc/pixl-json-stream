@@ -30,6 +30,13 @@ Things like network sockets are both read and write, so you only need to pass in
 	var stream = new JSONStream( socket_handle );
 ```
 
+If you use an `EOL` character different from `\n` in your JSON streams, then you'd use `setEoJ()` on your stream instance like this:
+
+```javascript
+	var stream = new JSONStream( socket_handle );
+	stream.setEoJ("\r\n");  // use of '\r\n' as EOL
+```
+
 You can then add a listener for the `json` event to receive a fully parsed JSON document, or call `write()` to send one.  Example:
 
 ```javascript
