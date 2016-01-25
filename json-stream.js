@@ -18,7 +18,7 @@ module.exports = Class.create({
 	buffer: '',
 	perf: null,
 	recordRegExp: /^\s*\{/,
-	eoj: "\n"   // end-of-json as opposed to EOL
+	eoj: "\n",   // end-of-json as opposed to EOL
 	
 	__construct: function(stream_in, stream_out) {
 		// class constructor
