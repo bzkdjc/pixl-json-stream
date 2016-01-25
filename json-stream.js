@@ -18,6 +18,7 @@ module.exports = Class.create({
 	buffer: '',
 	perf: null,
 	recordRegExp: /^\s*\{/,
+	eoj: "\n"   // end-of-json as opposed to EOL
 	
 	__construct: function(stream_in, stream_out) {
 		// class constructor
@@ -25,11 +26,13 @@ module.exports = Class.create({
 		
 		this.streamIn = stream_in;
 		this.streamOut = stream_out;
-		
+
 		this.init();
 	},
 	
 	setPerf: function(perf) { this.perf = perf; },
+
+	setEoJ: function(eoj) { this.eoj = eoj; },
 	
 	init: function() {
 		// hook stream read
@@ -42,11 +45,11 @@ module.exports = Class.create({
 				self.buffer = '';
 			}
 			
-			var records = data.split(/\n/);
+			var records = data.split(new RegExp(eoj));
 			
 			// see if data ends on EOL -- if not, we have a partial block
 			// fill buffer for next read
-			if (data.substring(data.length - 1) != "\n") {
+			if (data.substring(data.length - eoj.length) != eoj) {
 				self.buffer = records.pop();
 			}
 			
@@ -71,7 +74,7 @@ module.exports = Class.create({
 				} // record has json
 				else if (record.length && record.match(/\S/)) {
 					// non-json garbage, emit just in case app cares
-					self.emit('text', record + "\n");
+					self.emit('text', record + eoj);
 				}
 			} // foreach record
 			
@@ -92,7 +95,7 @@ module.exports = Class.create({
 		var data = JSON.stringify(json);
 		if (this.perf) this.perf.end('json_compose');
 		
-		this.streamOut.write( data + "\n", callback );
+		this.streamOut.write( data + eoj, callback );
 	}
 	
 });
